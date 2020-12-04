@@ -185,6 +185,7 @@
           let experiments = Array.from(new Set(data.map((d) => d.experiment)));
           let color = this.d3.scaleOrdinal().domain(experiments).range(this.exp_color);
           var keys = ["1%", "100%"];
+          console.log(experiments);
 
           this.legend = this.d3.select("#legend-container").append("svg")
               .attr("viewBox", [0, 0, 200, 200])
@@ -230,7 +231,7 @@
             .data(this.dodge(data, this.radius * 2 + this.padding, this.model_sel))
           .join("circle").classed('dot', true)
             .attr("r", this.radius)
-            .attr("fill", (d) => color(d.experiment))
+            .attr("fill", function(d){return color(d.experiment)})
             .attr("opacity", .8)
             .attr('cx', d => d.x)
             .attr('cy', d => this.height - this.marginY -this.padding - this.padding - d.y)
@@ -348,22 +349,14 @@
 #modeling, #modeling-template {
   text-align: center;
 }
-#progress-container {
+#legend-container {
   position: relative;
   width:80%;
   height: 30px;
   margin-left:10%;
   line-height: 2em;
 }
-.progress {
-  position: relative;
-  background-color:transparent;
-  top:1%;
-  left:50%;
-  font-size: .51em;
-  line-height: 1em;
-  color: red;
-}
+
 #scrolly {
    position: relative;
 }
