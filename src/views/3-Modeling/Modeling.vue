@@ -109,7 +109,7 @@
             height: 300,
             marginX: 20,
             marginY: 20,
-            radius: 5,
+            radius: 4,
             force_sim: null,
             bees: null,
             padding: null,
@@ -121,6 +121,7 @@
             init_decay: null,
             circles: null,
             rmse_monthly: null,
+            exp_color: ["darkmagenta","gold"]
             
           }
         },
@@ -149,7 +150,7 @@
           getData() {
             const self = this;
 
-            let promises = [self.d3.csv(self.publicPath + "data/beeswarm_monthly_rmse_cast.csv")];
+            let promises = [self.d3.csv(self.publicPath + "data/rmse_monthly_experiments.csv")];
             Promise.all(promises).then(self.callback);
 
           },
@@ -180,11 +181,16 @@
             .attr("width", this.width)
             .attr("height", this.height)
             .attr("class", "bees-dotPlot");
+
+            //use color scale for experiment
+            let experiments = Array.from(new Set(data.map((d) => d.experiment)));
+            let color = this.d3.scaleOrdinal().domain(experiments).range(this.exp_color);
+            var keys = ["1%", "100%"];
             
           //scale x axis
           this.xScale = this.d3.scaleLinear()
             .range([this.marginX, this.width - this.marginX])
-            .domain([0,7]);
+            .domain([0,10]);
 
            // add x axis
           this.bees.append("g")
@@ -197,7 +203,7 @@
             .data(this.dodge(data, this.radius * 2 + this.padding, this.model_sel))
           .join("circle").classed('dot', true)
             .attr("r", this.radius)
-            .attr("fill", "teal")
+            .attr("fill", (d) => color(d.experiment))
             .attr("opacity", .8)
             .attr('cx', d => d.x)
             .attr('cy', d => this.height - this.marginY -this.padding - this.padding - d.y)
@@ -265,8 +271,6 @@
             const self = this;
             // list models in order of transitions, use step index to select
             var model_list = ['ANN','RNN','RGCN','ANN', 'RNN', 'RGCN', 'RGCN_ptrn','RNN','ANN'];
-            var color_list = ['pink','teal','lightgreen','goldenrod','orangered','cadetblue','orchid','blue','transparent'];
-            var color_sel = color_list[data];
             this.model_sel = model_list[data];
 
           //move bees to new position
@@ -276,7 +280,7 @@
                 .duration(1000)
                 .attr('cx', d => d.x)
                 .attr('cy', d => this.height - this.marginY -this.padding - this.padding - d.y)
-                .style('fill', color_sel)
+ 
           },
         // scrollama event handler functions
         // add class on enter
