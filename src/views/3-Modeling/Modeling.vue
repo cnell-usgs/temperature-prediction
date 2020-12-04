@@ -256,7 +256,7 @@
             }  */
 
             //need to make this line universal so the dataset can be changed on scroll
-            this.circles = data.map(d => ({x: this.xScale(d[model]), data: d})).sort((a,b) => a.x - b.x);
+            this.circles = this.rmse_monthly.map(d => ({x: this.xScale(d[model]), data: d})).sort((a,b) => a.x - b.x);
 
             const epsilon = 1e-3;
             let head = null, tail = null;
