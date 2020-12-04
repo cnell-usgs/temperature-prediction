@@ -8,8 +8,7 @@
 
       <figure ref="figure" class="sticky">
         <div id="bees-container">
-          <div id="progress-container">
-          <p class="progress"/>
+          <div id="legend-container">
           </div>
         </div>
       </figure>
@@ -186,6 +185,34 @@
           let experiments = Array.from(new Set(data.map((d) => d.experiment)));
           let color = this.d3.scaleOrdinal().domain(experiments).range(this.exp_color);
           var keys = ["1%", "100%"];
+
+          this.legend = this.d3.select("#legend-container").append("svg")
+              .attr("viewBox", [0, 0, 200, 200])
+              .attr("width", 100)
+              .attr("height", 100)
+              .attr("class", "bees_legend");
+
+            //create color legend
+            this.legend.selectAll("mydots")
+              .data(keys)
+              .enter()
+              .append("circle")
+                .attr("cx", 100)
+                .attr("cy", function(d, i){ return 100 + i*50})
+                .attr("r", 8)
+                .style("fill", function(d){return color(d)});
+          
+          this.legend.selectAll("mylabels")
+            .data(keys)
+            .enter()
+            .append("text")
+              .attr("x", 120)
+              .attr("y", function(d,i){ return 100 + i*50})
+              .style("fill",  function(d){ return color(d)})
+              .text(function(d){ return d})
+              .attr("text-anchor", "left")
+              .attr("font-size", "50px")
+              .style("alignment-baseline", "middle");
             
           //scale x axis
           this.xScale = this.d3.scaleLinear()
