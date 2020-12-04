@@ -114,7 +114,7 @@
             padding: null,
             xScale: null,
             scroller: scrollama(), 
-            step: 0,
+            step: null,
             progress: 0,
             model_sel: null,
             init_decay: null,
@@ -163,7 +163,8 @@
           // resize to keep scroller accurate
           resize () {
             const self = this;
-            const bounds = this.$refs.figure.getBoundingClientRect()
+            const bounds = this.$refs.figure.getBoundingClientRect();
+            console.log(this.$refs.figure)
             this.width = bounds.width
             this.height = bounds.height
             this.marginX = bounds.width * 0.1
@@ -308,6 +309,9 @@
                 .duration(1000)
                 .attr('cx', d => d.x)
                 .attr('cy', d => this.height - this.marginY -this.padding - this.padding - d.y)
+
+              this.scroller.resize();
+
 
           },
         // scrollama event handler functions
