@@ -182,10 +182,10 @@
             .attr("height", this.height)
             .attr("class", "bees-dotPlot");
 
-            //use color scale for experiment
-            let experiments = Array.from(new Set(data.map((d) => d.experiment)));
-            let color = this.d3.scaleOrdinal().domain(experiments).range(this.exp_color);
-            var keys = ["1%", "100%"];
+          //use color scale for experiment
+          let experiments = Array.from(new Set(data.map((d) => d.experiment)));
+          let color = this.d3.scaleOrdinal().domain(experiments).range(this.exp_color);
+          var keys = ["1%", "100%"];
             
           //scale x axis
           this.xScale = this.d3.scaleLinear()
@@ -211,8 +211,8 @@
           },
           // to rearrange overlapping dots
           dodge(data, radius, model) {
-             const self = this;
-            const radius2 = this.radius ** 3;
+            const self = this;
+            const radius2 = this.radius ** 3.1;
 
             /* //swap x var to set dodge
             if (model === 'ANN') {
@@ -280,7 +280,7 @@
                 .duration(1000)
                 .attr('cx', d => d.x)
                 .attr('cy', d => this.height - this.marginY -this.padding - this.padding - d.y)
- 
+
           },
         // scrollama event handler functions
         // add class on enter
