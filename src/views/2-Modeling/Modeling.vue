@@ -1468,15 +1468,26 @@
             if (this.step >= this.step_ann) {
               vdecay = 0.4;
             } else {
-              vdecay = 0.5;
+              vdecay = 0.35;
             }
-
+          if( this.step < this.step_ann) {
             self.simulation
               .alpha(this.chartState.alpha)
-              .alphaDecay(this.chartState.aDecay)
-              .velocityDecay(vdecay)
+              .alphaDecay(this.chartState.aDecay*2)
+              //.velocityDecay(vdecay)
               .restart()
               .on("tick", self.tick);
+          } else {
+
+               self.simulation
+               .alpha(this.chartState.alpha)
+              .alphaTarget(.01)
+              .alphaDecay(this.chartState.aDecay)
+              //.velocityDecay(vdecay)
+              .restart()
+              .on("tick", self.tick);
+          }
+              
           },
           drawAxes(element, end) {
             const self = this;
@@ -1600,12 +1611,7 @@
 
         // modify forces to update chart
        // // first restart all forces and then define force velocity and ticking
-      self.simulation = this.d3.forceSimulation(self.chartState.dataset, function(d) { return d.seg }) // is the key needed here?
-          .force("x",null)
-          .force('y', null)
-          .force("collide", null)
-          .force("link", null)
-          .stop();
+
 
         self.simulation = this.d3.forceSimulation(self.chartState.dataset, function(d) { return d.seg }) // is the key needed here?
           .force("x", this.d3.forceX((d) => self.xScale(d[this.chartState.var_x])).strength(this.chartState.strengthx))
@@ -1666,11 +1672,14 @@
             .attr('cx', function(d){return d.x})
             .attr('cy', function(d){return d.y})
 
+            if (this.step > this.step_error_exp-1 && this.step <= this.step_rmse+1){
+
             this.link
                 .attr('x1', function(d) { return d.source.x; })
                 .attr('y1', function(d) { return d.source.y; })
                 .attr('x2', function(d) { return d.target.x; })
                 .attr('y2', function(d) { return d.target.y; });
+            }
         }, 
         // scrollama event handler functions
         // add class on enter, update charts based on step
@@ -1753,27 +1762,35 @@
              this.chartState.aDecay = 0.1;
           }
           if (response.direction == "up" && this.step <= this.step_rmse+2) {
-            this.chartState.strengthy = 1.5;
             this.chartState.strengthy = 2;
             this.chartState.radius = 0;
              this.chartState.strengthr = 0;
              this.chartState.alpha = 1;
-             this.chartState.aDecay = 0.1;
+             this.chartState.aDecay = 0.15;
           }
 
           // intro beeswarm, adding experiments
-          if (this.step <= this.step_ann_exp && this.step >= this.step_ann) {
-            this.chartState.strengthy = 0.9;
-            this.chartState.radius = this.paddedRadius;
-            this.chartState.alpha = .3;
+          if (this.step < this.step_ann_exp && this.step >= this.step_ann) {
+            this.chartState.strengthy = 0.8;
+            this.chartState.radius = this.paddedRadius*1.1;
+            this.chartState.strengthr = 1;
+            this.chartState.alpha = .5;
+            this.chartState.aDecay = 0.08;
+          }
+          if (this.step >= this.step_ann_exp && this.step < this.step_rnn) {
+            this.chartState.strengthy = 0.4;
+            this.chartState.radius = this.paddedRadius*1.1;
+            this.chartState.strengthr = 1;
+            this.chartState.alpha = .5;
             this.chartState.aDecay = 0.15;
           }
           // RNN to end
           if (this.step >= this.step_rnn ) {
             this.chartState.strengthy = 0.3;
-            this.chartState.radius = this.paddedRadius;
-            this.chartState.alpha = 0.3;
-            this.chartState.aDecay = 0.15;
+            this.chartState.radius = this.paddedRadius*1.1;
+            this.chartState.strengthr = 1;
+            this.chartState.alpha = .4;
+            this.chartState.aDecay = 0.25;
           }
           }
 
@@ -1894,7 +1911,6 @@
              self.fadeOut(this.legend_training_d001, this.time_fade) 
           } 
           //updating title
-          console.log(this.step)
               if (this.step < this.step_error_exp+1) {
                 this.title_text = "Training an artificial neural network"
                 } else if (this.step >= this.step_error_exp+1 && this.step < this.step_rnn_title+1) {
@@ -2027,9 +2043,9 @@ article {
     margin: auto;
   }
   .step-text {
-    color: $offWhiteBox;
+    color: transparent;
     padding: 1em;
-    background-color: $boxCharcoal;
+    background-color: transparent;
     border-radius: 5px;
     @media screen and (max-width: 600px) {
       font-size: 12.5pt;
@@ -2086,7 +2102,7 @@ figure.sticky.charts {
   display: grid;
   padding-top: 1.1em;
   grid-template-rows: 15% 70% 15%;
-  grid-template-columns: 2% 1fr 1fr 2%;
+  grid-template-columns: 2% 2fr 3fr 2%;
   z-index: 1;
   
   top: 0vh; 
@@ -2106,15 +2122,16 @@ figure.sticky.charts {
  
  
   #flubber-container {
+    transform: translate(0, 25px) scale(1.2, 1.2);
     grid-column: 2 / 2;
-    grid-row: 2 / 2;
+    grid-row: 2 / 3;
     height: 100%;
     width: auto;
     min-width: 0;
     min-height: 0;
     @media screen and (min-height: 800px) {
-      grid-column: 2 / 2;
-      grid-row: 2 / 2;
+      grid-column: 1 / 2;
+      grid-row: 2 / 3;
     }
     @media screen and (max-width: 600px) {
       grid-column: 2 / 2;
