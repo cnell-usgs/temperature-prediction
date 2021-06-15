@@ -1775,21 +1775,17 @@
             this.chartState.radius = this.paddedRadius*1.1;
             this.chartState.strengthr = 1;
             this.chartState.alpha = .5;
-            this.chartState.aDecay = 0.08;
+            this.chartState.aDecay = 0.25;
           }
           if (this.step >= this.step_ann_exp && this.step < this.step_rnn) {
             this.chartState.strengthy = 0.4;
-            this.chartState.radius = this.paddedRadius*1.1;
-            this.chartState.strengthr = 1;
-            this.chartState.alpha = .5;
-            this.chartState.aDecay = 0.15;
+            this.chartState.alpha = .4;
+            this.chartState.aDecay = 0.25;
           }
           // RNN to end
           if (this.step >= this.step_rnn ) {
             this.chartState.strengthy = 0.3;
-            this.chartState.radius = this.paddedRadius*1.1;
-            this.chartState.strengthr = 1;
-            this.chartState.alpha = .4;
+            this.chartState.alpha = .3;
             this.chartState.aDecay = 0.25;
           }
           }
@@ -2124,13 +2120,13 @@ figure.sticky.charts {
   #flubber-container {
     transform: translate(0, 25px) scale(1.2, 1.2);
     grid-column: 2 / 2;
-    grid-row: 2 / 3;
+    grid-row: 2 / 2;
     height: 100%;
     width: auto;
     min-width: 0;
     min-height: 0;
     @media screen and (min-height: 800px) {
-      grid-column: 1 / 2;
+      grid-column: 2 / 2;
       grid-row: 2 / 3;
     }
     @media screen and (max-width: 600px) {
